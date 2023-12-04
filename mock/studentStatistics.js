@@ -1,4 +1,4 @@
-module.exports.studentStatistics = [
+module.exports = studentStatistics = [
   {
     name: 'Tartak Man',
     scores: [

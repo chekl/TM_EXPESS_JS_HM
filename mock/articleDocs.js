@@ -1,4 +1,4 @@
-module.exports.articleDocs = [
+module.exports = articleDocs = [
   {
     name: 'HTML - introduction',
     description: 'HTML - text',

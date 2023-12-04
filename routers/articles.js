@@ -1,46 +1,34 @@
 const express = require('express');
 const router = express.Router();
 
-const articlesData = require('../mock/articleDocs');
+const articleMdware = require('../middlewares/article.mdware');
+
+let articleDocs = require('../mock/articleDocs');
 
 router.get('/', (req, res) => {
   res.json(articlesData);
 });
 
-router.post('/', (req, res) => {
-  if (
-    !req.body.name ||
-    !req.body.description ||
-    !req.body.type ||
-    !req.body.tags
-  ) {
-    res.send('You missed some parameters!');
+router.post(
+  '/',
+  articleMdware.validateArticleParameters,
+  articleMdware.isNameNotExist,
+  (req, res) => {
+    articleDocs.push(req.body);
+    res.json(articleDocs);
   }
-  articlesData.articleDocs.push(req.body);
-  res.json(articlesData);
-});
+);
 
-router.patch('/:name', (req, res) => {
-  if (!req.params.name) {
-    res.send('You missed name!');
+router.patch(
+  '/:name',
+  articleMdware.isTagsExist,
+  articleMdware.isNameExist,
+  (req, res) => {
+    articleDocs = articleDocs.map((a) =>
+      a.name === req.params.name ? { ...a, tags: req.body.tags } : a
+    );
+    res.json(articleDocs);
   }
-
-  let article = articlesData.articleDocs.filter(
-    (a) => a.name === req.params.name
-  );
-
-  if (!article) {
-    res.send('This name is not appear!');
-  }
-
-  if (!req.body.tags) {
-    res.send('You missed tags in request body!');
-  }
-
-  articlesData.articleDocs = articlesData.articleDocs.map((u) =>
-    u.name === req.params.name ? { ...u, tags: [...req.body.tags] } : u
-  );
-  res.json(articlesData);
-});
+);
 
 module.exports = router;

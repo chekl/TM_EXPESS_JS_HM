@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const studentData = require('../mock/studentStatistics');
+const studentStatistics = require('../mock/studentStatistics');
 
 router.get('/', (req, res) => {
-  res.json(studentData);
+  res.json(studentStatistics);
 });
 
 router.get('/worst_score', (req, res) => {
@@ -12,7 +12,8 @@ router.get('/worst_score', (req, res) => {
     studentIndex: -1,
     score: 100,
   };
-  studentData.studentStatistics.map((s, index) =>
+
+  studentStatistics.map((s, index) =>
     s.scores.map((sc) => {
       if (sc.type === 'homework') {
         min =
@@ -20,7 +21,12 @@ router.get('/worst_score', (req, res) => {
       }
     })
   );
-  res.json(studentData.studentStatistics[min.studentIndex]);
+
+  if (min.studentIndex < 0) {
+    res.json({ result: 'All students have an excellent score' });
+  }
+
+  res.json(studentStatistics[min.studentIndex]);
 });
 
 module.exports = router;

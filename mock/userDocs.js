@@ -1,4 +1,4 @@
-module.exports.userDocs = [
+module.exports = userDocs = [
   {
     firstName: 'Vika',
     lastName: 'Mats',
